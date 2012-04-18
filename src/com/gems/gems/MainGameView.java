@@ -16,8 +16,8 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private MainThread thread;
     private static final String TAG = MainGameView.class.getSimpleName();
     private int[][] m_board;
-    private int m_width;
-    private int m_height;
+    private final int m_width = 10;
+    private final int m_height = 10;
 
     private Bitmap[] m_tiles;
     private int m_twidth;
@@ -31,18 +31,19 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private final int CYAN = GREEN | BLUE;
     private final int WHITE = RED | GREEN | BLUE;
 
+    private Random r;
+
 	public MainGameView(Context context)
     {
 		super(context);
 
-        m_width = 10;
-        m_height = 10; m_board = new int[m_width][m_height];
-        Random r = new Random();
+        m_board = new int[m_width][m_height];
+        r = new Random();
         for(int y=0; y<m_height; ++y)
         {
             for(int x=0; x<m_width; ++x)
             {
-                m_board[x][y] = r.nextInt(WHITE);
+                m_board[x][y] = getRandom();
             }
         }
 
@@ -88,11 +89,17 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
             Log.d(TAG, "Action move");
         }
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            if(event.getY() > getHeight() - 50) {
-                thread.setRunning(false);
-            }
-            else {
-                Log.d(TAG, event.getX() + ", " + event.getY());
+            //if(event.getY() > getHeight() - 50) {
+                //thread.setRunning(false);
+            //}
+            Log.d(TAG, "DOWN " + event.getX() + ", " + event.getY());
+            int x = (int)event.getX() / m_twidth;
+            int y = (int)event.getY() / m_theight;
+
+            if(x < m_width && y < m_height)
+            {
+                if(--m_board[x][y] < 0)
+                    m_board[x][y] = getRandom();
             }
         }
         if(event.getAction() == MotionEvent.ACTION_UP)
@@ -125,9 +132,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         m_tiles[CYAN] = BitmapFactory.decodeResource(getResources(), R.drawable.cyan);
         m_tiles[WHITE] = BitmapFactory.decodeResource(getResources(), R.drawable.white);
 
-        Log.d(TAG, "white: " + WHITE);
-
         m_twidth = m_tiles[0].getWidth();
         m_theight = m_tiles[0].getHeight();
+    }
+
+    int getRandom()
+    {
+        return 1 + r.nextInt(WHITE);
     }
 }
