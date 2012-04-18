@@ -98,8 +98,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
 
             if(x < m_width && y < m_height)
             {
-                if(--m_board[x][y] < 0)
-                    m_board[x][y] = getRandom();
+                //if(checkTile(x, y))
+                //{
+                    //if(--m_board[x][y] <= 0)
+                        //shiftDown(x, y);
+                //}
+                removeTiles(x, y);
             }
         }
         if(event.getAction() == MotionEvent.ACTION_UP)
@@ -139,5 +143,63 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     int getRandom()
     {
         return 1 + r.nextInt(WHITE);
+    }
+
+    void shiftDown(int x, int y)
+    {
+        for(int i = y; i > 0; --i)
+        {
+            m_board[x][i] = m_board[x][i-1];
+        }
+        m_board[x][0] = getRandom();
+    }
+
+    boolean checkTile(int x, int y)
+    {
+        int color = m_board[x][y];
+        int count = 0;
+        if(color == RED || color == BLUE || color == GREEN)
+        {
+            if(x > 0 && (m_board[x-1][y] & color) != 0) ++count;
+            if(x < (m_width - 1) && (m_board[x+1][y] & color) != 0) ++count;
+            if(y > 0 && (m_board[x][y-1] & color) != 0) ++count;
+            if(y < (m_height - 1) && (m_board[x][y+1] & color) != 0) ++count;
+        }
+        return count >= 2;
+    }
+
+    void removeTiles(int x, int y)
+    {
+        if(checkTile(x, y))
+        {
+            int color = m_board[x][y];
+            removeColor(color, x, y);
+            scanForEmpties();
+        }
+    }
+
+    void removeColor(int color, int x, int y)
+    {
+        if((m_board[x][y] & color) != 0)
+        {
+            m_board[x][y] &= ~color;
+
+            if(x > 0) removeColor(color, x-1, y);
+            if(x < m_width - 1) removeColor(color, x+1, y);
+            if(y > 0) removeColor(color, x, y-1);
+            if(y < m_height - 1) removeColor(color, x, y+1);
+        }
+    }
+
+    void scanForEmpties()
+    {
+        for(int y = 0; y < m_height; ++y)
+        {
+            for(int x = 0; x < m_width; ++x)
+            {
+                if(m_board[x][y] == 0)
+                    shiftDown(x, y);
+            }
+        }
     }
 }
