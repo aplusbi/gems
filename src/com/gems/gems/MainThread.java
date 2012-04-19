@@ -23,14 +23,18 @@ public class MainThread extends Thread {
 
     @Override public void run() {
         Canvas canvas;
-        long tickCount = 0L;
-        Log.d(TAG, "Starting thread loop");
+        long time = System.currentTimeMillis();
+        long lastTime = time;
         while(running) {
             canvas = null;
             try {
                 canvas = this.m_holder.lockCanvas();
                 synchronized(this.m_holder) {
+                    
+                    this.m_view.update(time - lastTime);
                     this.m_view.onDraw(canvas);
+                    lastTime = time;
+                    time = System.currentTimeMillis();
                 }
             }
             finally {
@@ -38,8 +42,6 @@ public class MainThread extends Thread {
                     this.m_holder.unlockCanvasAndPost(canvas);
                 }
             }
-            ++tickCount;
         }
-        Log.d(TAG, "Game loop executed " + tickCount + " loops");
     }
 }
