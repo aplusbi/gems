@@ -28,12 +28,12 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     private ArrayList<Animation> m_anims;
 
     private final int RED = 1;
-    private final int GREEN = 2;
+    private final int YELLOW = 2;
     private final int BLUE = 4;
-    private final int YELLOW = RED | GREEN;
+    private final int ORANGE = RED | YELLOW;
     private final int PURPLE = RED | BLUE;
-    private final int CYAN = GREEN | BLUE;
-    private final int WHITE = RED | GREEN | BLUE;
+    private final int GREEN = YELLOW | BLUE;
+    private final int WHITE = RED | YELLOW | BLUE;
 
     private final int DELETE = 8;
     private final int SHIFT = 16;
@@ -157,7 +157,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
         m_tiles[BLUE] = BitmapFactory.decodeResource(getResources(), R.drawable.blue);
         m_tiles[YELLOW] = BitmapFactory.decodeResource(getResources(), R.drawable.yellow);
         m_tiles[PURPLE] = BitmapFactory.decodeResource(getResources(), R.drawable.purple);
-        m_tiles[CYAN] = BitmapFactory.decodeResource(getResources(), R.drawable.cyan);
+        m_tiles[ORANGE] = BitmapFactory.decodeResource(getResources(), R.drawable.orange);
         m_tiles[WHITE] = BitmapFactory.decodeResource(getResources(), R.drawable.white);
 
         m_delete = BitmapFactory.decodeResource(getResources(), R.drawable.delete);
@@ -184,7 +184,7 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
     {
         int color = m_board[x][y];
         int count = 0;
-        if(color == RED || color == BLUE || color == GREEN)
+        if(color == RED || color == BLUE || color == YELLOW)
         {
             if(x > 0 && (m_board[x-1][y] & color) != 0) ++count;
             if(x < (m_width - 1) && (m_board[x+1][y] & color) != 0) ++count;

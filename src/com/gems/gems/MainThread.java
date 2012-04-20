@@ -1,15 +1,12 @@
 package com.gems.gems;
 
 import android.view.SurfaceHolder;
-import android.util.Log;
 import android.graphics.Canvas;
 
 public class MainThread extends Thread {
     private boolean running;
     private SurfaceHolder m_holder;
     private MainGameView m_view;
-
-    private static final String TAG = MainThread.class.getSimpleName();
 
     public MainThread(SurfaceHolder holder, MainGameView view) {
         super();
