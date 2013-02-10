@@ -55,7 +55,6 @@ public class MainGameView extends SurfaceView implements SurfaceHolder.Callback
             }
         }
 
-
         loadTiles();
 
         m_anims = new ArrayList<Animation>();
